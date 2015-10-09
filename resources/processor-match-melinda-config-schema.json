@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+	"matching": {
+	    "$ref": "https://github.com/NatLibFi/json-similarity/blob/master/resources/spec-schema.json"
+	},
+	"matchCandidatesQuery": {
+	    "type": "array",
+	    "items": {
+		"type": "object",
+		"properties": {
+		    "transformations": {
+			"$ref": "https://github.com/NatLibFi/json-path-transformations/blob/master/resources/transformations-schema.json#/properties/transformations"
+		    },
+		    "query": {
+			"type": "string"
+		    }
+		},
+		"required": ["query"]
+	    }
+	}
+    },
+    "require": ["matching", "matchCandidatesQuery"]
+}

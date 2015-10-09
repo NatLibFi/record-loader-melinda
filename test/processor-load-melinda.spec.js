@@ -25,20 +25,19 @@
  * for the JavaScript code in this file.
  *
  **/
-
 (function (root, factory) {
 
     'use strict';
 
     if (typeof define === 'function' && define.amd) {
-	define(['chai', 'chai-as-promised', '../lib/processors/match/melinda'], factory);
+	define(['chai', 'chai-as-promised', '../lib/processors/load/melinda'], factory);
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('chai'), require('chai-as-promised'), require('../lib/processors/match/melinda'));
+        module.exports = factory(require('chai'), require('chai-as-promised'), require('../lib/processors/load/melinda'));
     }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, match)
+function factory(chai, chaiAsPromised, load)
 {
 
     'use strict';
@@ -47,14 +46,13 @@ function factory(chai, chaiAsPromised, match)
     
     chai.use(chaiAsPromised);
 
-    describe('processor-match-json-melinda', function() {
+    describe('processor-load-melinda', function() {
 
 	it('Should set the record store successfully');
-	it('Should run and return the input');
-	it('Should run and return the input record and matched records');
+	it('Should run and return expected load result');
+	it('Should run and reject because of invalid load options');
 	it('Should set converter succesfully');
-	it('Should find match candidates');
-    
+   
     });
 
 }

@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "properties": {
+	"sru": {
+	    "type": "object",
+	    "properties": {
+		"url": {
+		    "type": "string",
+		    "format": "uri"
+		},
+		"maximumRecords": {
+		    "type": "number",
+		    "default": 100
+		}
+	    },
+	    "required": ["url"]
+	},
+	"melinda": {
+	    "type": "object",
+	    "properties": {
+		"endpoint": {
+		    "type": "string",
+		    "format": "uri"
+		},
+		"username": {
+		    "type": "string"
+		},
+		"password": {
+		    "type": "string"
+		}
+	    },
+	    "required": ["endpoint", "username", "password"]
+	}
+    },
+    "required": ["sru", "melinda"]
+}
