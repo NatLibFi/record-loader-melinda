@@ -80,7 +80,7 @@
 	"sru-client": "https://github.com/NatLibFi/sru-client",
 	"record-loader-json": "https://github.com/NatLibFi/record-loader-json",
 	"melinda-api-client": "https://github.com/NatLibFi/melinda-api-client",
-	"marc-record-serializers": "https://github.com/natlibfi-arlehiko/marc-record-serializers#err-stream"
+	"marc-record-serializers": "https://github.com/natlibfi-arlehiko/marc-record-serializers#dep-update"
     },
     "devDependencies": {
 	"chai": "^3.2.0",
