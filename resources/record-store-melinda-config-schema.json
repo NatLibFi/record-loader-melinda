@@ -5,6 +5,14 @@
 	    "properties": {
 		"melinda": {
 		    "$ref": "#/definitions/melinda"
+		}
+	    },
+	    "required": ["melinda"]
+	},
+	{
+	    "properties": {
+		"melinda": {
+		    "$ref": "#/definitions/melinda"
 		},
 		"alephX": {
 		    "type": "object",
