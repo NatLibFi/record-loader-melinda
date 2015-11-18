@@ -13,7 +13,25 @@
 			"$ref": "https://github.com/NatLibFi/json-path-transformations/blob/master/resources/transformations-schema.json#/properties/transformations"
 		    },
 		    "query": {
-			"type": "string"
+			"anyOf": [
+			    {
+				"description": "SRU query",
+				"type": "string"
+			    },
+			    {
+				"description": "Aleph X query",
+				"type": "object",
+				"properties": {
+				    "index": {
+					"type": "string"
+				    },
+				    "term": {
+					"type": "string"
+				    }
+				},
+				"required": ["index", "term"]
+			    }
+			]
 		    }
 		},
 		"required": ["query"]

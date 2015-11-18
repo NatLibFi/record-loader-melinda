@@ -1,20 +1,51 @@
 {
     "type": "object",
-    "properties": {
-	"sru": {
-	    "type": "object",
+    "anyOf": [
+	{
 	    "properties": {
-		"url": {
-		    "type": "string",
-		    "format": "uri"
+		"melinda": {
+		    "$ref": "#/definitions/melinda"
 		},
-		"maximumRecords": {
-		    "type": "number",
-		    "default": 100
+		"alephX": {
+		    "type": "object",
+		    "properties": {
+			"Xendpoint": {
+			    "type": "string",
+			    "format": "uri"
+			},
+			"base": {
+			    "type": "string"
+			}
+		    },
+		    "required": ["Xendpoint", "base"]
 		}
 	    },
-	    "required": ["url"]
+	    "required": ["melinda", "alephX"]
 	},
+	{
+	    "properties": {
+		"melinda": {
+		    "$ref": "#/definitions/melinda"
+		},
+		"sru": {
+		    "type": "object",
+		    "properties": {
+			"url": {
+			    "type": "string",
+			    "format": "uri"
+			},
+			"maximumRecords": {
+			    "type": "number",
+			    "default": 100
+			}
+		    },
+		    "required": ["url"]
+		}
+	    },
+	    "required": ["melinda", "sru"]
+	}
+    ],
+    "definitions": {
 	"melinda": {
 	    "type": "object",
 	    "properties": {
@@ -31,6 +62,5 @@
 	    },
 	    "required": ["endpoint", "username", "password"]
 	}
-    },
-    "required": ["sru", "melinda"]
+    }
 }
