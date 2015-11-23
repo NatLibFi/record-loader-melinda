@@ -73,16 +73,20 @@
 	"jjve": "^0.5.0",
 	"jxon": "^1.5.4",
 	"marc-record-js": "^0.1.1",
+	"mimemessage": ">=1.0.3 <1.1",
 	"jsonpath": "^0.2.0",
-	"aleph-x-query": "https://github.com/NatLibFi/aleph-x-query",
+	"jxon": "^1.5.4",
 	"es6-polyfills": "https://github.com/NatLibFi/es6-polyfills",
 	"json-path-transformations": "https://github.com/NatLibFi/json-path-transformations",
 	"json-similarity": "https://github.com/NatLibFi/json-similarity",
 	"object-comparison": "https://github.com/NatLibFi/object-comparison",
 	"sru-client": "https://github.com/NatLibFi/sru-client",
+	"aleph-x-query": "https://github.com/NatLibFi/aleph-x-query",
 	"record-loader-json": "https://github.com/NatLibFi/record-loader-json",
+	"record-loader-marc": "https://github.com/NatLibFi/record-loader-marc",
 	"melinda-api-client": "https://github.com/NatLibFi/melinda-api-client",
-	"marc-record-converters": "https://github.com/NatLibFi/marc-record-converters"
+	"marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
+	"cli-wrap": "https://github.com/NatLibFi/cli-wrap"
     },
     "devDependencies": {
 	"chai": "^3.2.0",
