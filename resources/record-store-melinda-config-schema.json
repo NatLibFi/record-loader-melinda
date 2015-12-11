@@ -66,6 +66,10 @@
 		},
 		"password": {
 		    "type": "string"
+		},
+		"cache": {
+		    "type": "boolean",
+		    "default": false
 		}
 	    },
 	    "required": ["endpoint", "username", "password"]
