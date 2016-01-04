@@ -84,6 +84,7 @@
 	"aleph-x-query": "https://github.com/NatLibFi/aleph-x-query",
 	"record-loader-json": "https://github.com/NatLibFi/record-loader-json",
 	"record-loader-marc": "https://github.com/NatLibFi/record-loader-marc",
+	"record-loader-prototypes": "https://github.com/NatLibFi/record-loader-prototypes",
 	"melinda-api-client": "https://github.com/NatLibFi/melinda-api-client",
 	"marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
 	"cli-wrap": "https://github.com/NatLibFi/cli-wrap"
