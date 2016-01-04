@@ -78,7 +78,7 @@
 	"jxon": "^1.5.4",
 	"es6-polyfills": "https://github.com/NatLibFi/es6-polyfills",
 	"json-path-transformations": "https://github.com/NatLibFi/json-path-transformations",
-	"json-similarity": "https://github.com/NatLibFi/json-similarity#merge-matches",
+	"json-similarity": "https://github.com/NatLibFi/json-similarity",
 	"object-comparison": "https://github.com/NatLibFi/object-comparison",
 	"sru-client": "https://github.com/NatLibFi/sru-client",
 	"aleph-x-query": "https://github.com/NatLibFi/aleph-x-query",
