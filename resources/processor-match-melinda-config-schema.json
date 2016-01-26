@@ -1,8 +1,11 @@
 {
     "type": "object",
     "properties": {
+	"rank": {
+	    "$ref": "file://../node_modules/marc-record-rank/resources/configuration-schema.json"
+	},
 	"matching": {
-	    "$ref": "https://github.com/NatLibFi/json-similarity/blob/master/resources/spec-schema.json"
+	    "$ref": "file://../node_modulesjson-similarity/resources/spec-schema.json"
 	},
 	"matchCandidatesQuery": {
 	    "type": "array",
@@ -10,7 +13,7 @@
 		"type": "object",
 		"properties": {
 		    "transformations": {
-			"$ref": "https://github.com/NatLibFi/json-path-transformations/blob/master/resources/transformations-schema.json#/properties/transformations"
+			"$ref": "file://../node_modules/json-path-transformations/resources/transformations-schema.json#/properties/transformations"
 		    },
 		    "query": {
 			"anyOf": [

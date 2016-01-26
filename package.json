@@ -87,7 +87,8 @@
 	"record-loader-prototypes": "https://github.com/NatLibFi/record-loader-prototypes",
 	"melinda-api-client": "https://github.com/NatLibFi/melinda-api-client",
 	"marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
-	"cli-wrap": "https://github.com/NatLibFi/cli-wrap"
+	"cli-wrap": "https://github.com/NatLibFi/cli-wrap",
+	"marc-record-rank": "https://github.com/NatLibFi/marc-record-rank"
     },
     "devDependencies": {
 	"chai": "^3.2.0",
