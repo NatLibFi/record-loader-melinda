@@ -23,6 +23,9 @@
 			},
 			"base": {
 			    "type": "string"
+			},
+			"onError": {
+			    "$ref": "#/definitions/onError"
 			}
 		    },
 		    "required": ["Xendpoint", "base"]
@@ -45,6 +48,9 @@
 			"maximumRecords": {
 			    "type": "number",
 			    "default": 100
+			},
+			"onError": {
+			    "$ref": "#/definitions/onError"
 			}
 		    },
 		    "required": ["url"]
@@ -70,9 +76,33 @@
 		"cache": {
 		    "type": "boolean",
 		    "default": false
+		},
+		"onError": {
+		    "$ref": "#/definitions/onError"
 		}
 	    },
 	    "required": ["endpoint", "username", "password"]
+	},
+	"onError": {
+	    "type": "object",
+	    "properties": {
+		"retry": {
+		    "anyOf": [
+			{
+			    "type": "number"
+			},
+			{
+			    "type": "boolean"
+			}
+		    ]
+		},
+		"waitSeconds": {
+		    "type": "number"
+		}
+	    },
+	    "default": {
+		"retry": false
+	    }
 	}
     }
 }
