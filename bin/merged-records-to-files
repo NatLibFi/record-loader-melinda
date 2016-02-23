@@ -1,10 +1,11 @@
+#!/usr/bin/env node                                                                        
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file. 
  *
  * Melinda related modules for recordLoader
  *
- * Copyright (c) 2015-2016 University Of Helsinki (The National Library Of Finland)
+ * Copyright (c) 2016 University Of Helsinki (The National Library Of Finland)
  *
  * This file is part of record-loader-melinda
  *
@@ -26,26 +27,7 @@
  *
  **/
 
-
-module.exports = function(name, argv, console, std_streams)
-{
-
-    'use strict';
-
-    var fs = require('fs'),
-    hostComponentsRelations = require('./main'),
-    usage = 'Usage: ' + name + ' <RECORD_STORE_HOST_ID> <DATA_FILE> <DATA_CONTENT_TYPE>\n'
-	+ 'Create new host-components-relations bundle\n';
-    
-    if (argv.length < 3) {
-	console.log(usage);
-	return 1;
-    } else {
-	console.log(hostComponentsRelations(
-	    argv[0],
-	    fs.readFileSync(argv[1], {encoding: 'utf8'}),
-	    argv[2]
-	));
-    }
-
-}
+require('cli-wrap')(
+	require('../lib/scripts/merged-records-to-files'),
+	'merged-records-to-files'
+);
