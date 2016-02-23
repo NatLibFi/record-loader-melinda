@@ -5,7 +5,7 @@
 	    "$ref": "file://../node_modules/marc-record-rank/resources/configuration-schema.json"
 	},
 	"matching": {
-	    "$ref": "file://../node_modulesjson-similarity/resources/spec-schema.json"
+	    "$ref": "file://../node_modules/json-similarity/resources/spec-schema.json"
 	}
     },
     "require": ["matching"]
