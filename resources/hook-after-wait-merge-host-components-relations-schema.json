@@ -1,0 +1,45 @@
+{
+    "type": "object",
+    "properties": {
+	"difference": {
+	    "type": "object",
+	    "description": "Denotes the maximum number of extraneous components that are allowed. If the number components exceeds the value the processing is aborted.",
+	    "properties": {
+		"recordSet": {
+		    "description": "Maximum number of extraneous components to allow for the record set",
+		    "type": "number"
+		},
+		"recordStore": {
+		    "description": "Maximum number of extraneous components to allow for the record store",
+		    "type": "number"
+		}
+	    },
+	    "additionalProperties": false,
+	    "default": {}
+	},
+	"findMissingByIndex": {	   
+	    "description": "Attempts to find matches for records based on the index of the record id (001-field). Example: There is no match for record 124 but there are matches for records 123, 125 and their corresponding matches have ids 1500 and 1502. Therefore it is assumed that the match for record set record 124 is 1501 in the record store",
+	    "type": "boolean",
+	    "default": false
+	},
+	"onFailure": {
+	    "type": "object",
+	    "description": "Force creating records in the record store when the check for corresponding records fail",
+	    "properties": {
+		"updateEmptyHost": {
+		    "description": "Create all components from the record set in the record store as new and set them as components of the record store host.",
+		    "type": "boolean",
+		    "default": false
+		},
+		"createAsNew": {
+		    "description": "Create all records as new in the record store",
+		    "type": "boolean",
+		    "default": false
+		}
+	    },
+	    "additionalProperties": false,
+	    "default": {}
+	}
+    },
+    "additionalProperties": false
+}
