@@ -1,0 +1,9 @@
+language: node_js
+node_js: "0.12"
+script: npm run travisci
+after_script:
+  - codeclimate-test-reporter < coverage/lcov.info
+addons:
+  code_climate:
+    repo_token:
+      secure: "diMdxb9AzXVs9LABAbM6kA8xNGcZX/cM/klpQDTINfFPh0WK9H9npAKHqtpObyb8fd9qsBKSL0Ms+xiHdTHmrcp9UYRT4omtmiJkCtxIv0mgVQhrZXPQ7agb+VW6CMHYxsQTdvibs3hjLPkLFQry3AtaKGWK2kHKdZLBcdsdBa1K/huMolHiP/+4gf1fF9sndYDjucqhRZ93yf1+3MOmoKFkLzNOzTd7d0pKm9/2empBsdGjsA0xL41LRniIPXGCgb+0anj06GBqgHzlphHiGtrJEsRrNI3bNKLIuRZTTIw+rd6rTTeBJkYVrzbFOIf60ZGzZ2HcY83InhJvxUhHBBXGKp6z35bkGZokYoYGu4PqaYl2r1Mo+XUra0C8Nhz2keyLe2+k5X3irGmxJwzCLDwPvQskQ9slcye8Bhkc/k2Ettc99Yg5wYqNnwX3C2E0u6TL02P6dYIGsdgnavElRMInBbRTz/2/xllZCcFYe0y+FPaYYd8K8NBOiCUHxw7iFBy/TqVm0NGUTiaK8TFOHG0Wylvo7/R6/ymGoqxuiOlYM9KyHPjQ9qOo51yJMnPu59pMlfFm+NZflVz+JPHOgqGAZt0RrAG7+S1CcpaNUPP2RmhGwEz/Q7jDL21OKgwGzS6k9nr39zfwGhMVfnVmd4RTIbCZLsSisS3NzstBclA="

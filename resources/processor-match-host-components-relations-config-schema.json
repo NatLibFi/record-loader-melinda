@@ -1,12 +1,12 @@
 {
-    "type": "object",
-    "properties": {
-	"rank": {
-	    "$ref": "file://../node_modules/marc-record-rank/resources/configuration-schema.json"
-	},
-	"matching": {
-	    "$ref": "file://../node_modules/json-similarity/resources/spec-schema.json"
-	}
+  "type": "object",
+  "properties": {
+    "rank": {
+      "$ref": "file://../node_modules/marc-record-rank/resources/configuration-schema.json"
     },
-    "require": ["matching"]
+    "matching": {
+      "$ref": "file://../node_modules/json-similarity/resources/spec-schema.json"
+    }
+  },
+  "require": ["matching"]
 }
