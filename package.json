@@ -105,7 +105,7 @@
     "record-loader-json": "https://github.com/NatLibFi/record-loader-json",
     "record-loader-marc": "https://github.com/NatLibFi/record-loader-marc",
     "record-loader-prototypes": "https://github.com/NatLibFi/record-loader-prototypes",
-    "melinda-api-client": "https://github.com/NatLibFi/melinda-api-client",
+    "melinda-api-client": "https://github.com/NatLibFi/melinda-api-client#75a7d517d3a145de21ef6ea9df199e7a1815df5b",
     "marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
     "cli-wrap": "https://github.com/NatLibFi/cli-wrap",
     "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank"
