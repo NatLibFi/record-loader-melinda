@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "validation": {
+      "$ref": "file://../node_modules/marc-record-validators-melinda/node_modules/marc-record-validate/resources/configuration-schema.json"
+    },
+    "merging": {
+      "$ref": "file://../node_modules/record-loader-marc/resources/processor-merge-marc-schema.json"
+    }
+  }
+}

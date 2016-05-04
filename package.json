@@ -108,7 +108,8 @@
     "melinda-api-client": "https://github.com/NatLibFi/melinda-api-client#75a7d517d3a145de21ef6ea9df199e7a1815df5b",
     "marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
     "cli-wrap": "https://github.com/NatLibFi/cli-wrap",
-    "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank"
+    "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank",
+    "marc-record-validators-melinda": "https://github.com/NatLibFi/marc-record-validators-melinda"
   },
   "devDependencies": {
     "chai": "^3.2.0",
