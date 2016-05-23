@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "properties": {
+    "validators": {
+      "$ref": "file:///../node_modules/marc-record-validate/resources/configuration-schema.json/properties.validators"
+    }
+  }
+}

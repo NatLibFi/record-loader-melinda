@@ -109,7 +109,8 @@
     "marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
     "cli-wrap": "https://github.com/NatLibFi/cli-wrap",
     "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank",
-    "marc-record-validators-melinda": "https://github.com/NatLibFi/marc-record-validators-melinda"
+    "marc-record-validators-melinda": "https://github.com/NatLibFi/marc-record-validators-melinda",
+    "marc-record-validate": "https://github.com/NatLibFi/marc-record-validate"
   },
   "devDependencies": {
     "chai": "^3.2.0",
