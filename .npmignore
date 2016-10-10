@@ -1,4 +1,2 @@
-node_modules
 coverage
-test/browser/main.js
-npm-debug.log
+test/browser-main.js
