@@ -85,14 +85,14 @@
     "marc-record-js": "^0.1.1",
     "es6-polyfills": "^1.1.0",
     "record-loader-prototypes": "^1.0.0",
-    "marc-record-merge": "^2.0.1",
-    "merge": "^1.2.0",
-    "json-similarity": "https://github.com/NatLibFi/json-similarity",
+    "marc-record-merge": "https://github.com/NatLibFi/marc-record-merge#simplify",
+    "merge": "https://github.com/natlibfi-arlehiko/merge#umd",
+    "json-similarity": "https://github.com/NatLibFi/json-similarity#simplify",
     "melinda-api-client": "https://github.com/NatLibFi/melinda-api-client#stable",
     "marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
     "cli-wrap": "https://github.com/NatLibFi/cli-wrap",
-    "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank",
-    "marc-record-validators-melinda": "https://github.com/NatLibFi/marc-record-validators-melinda"
+    "marc-record-rank": "https://github.com/NatLibFi/marc-record-rank#simplify",
+    "marc-record-validators-melinda": "https://github.com/NatLibFi/marc-record-validators-melinda#simplify"
   },
   "peerDependencies": {
     "record-loader": "^1.0.0"
