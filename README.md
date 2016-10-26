@@ -1,26 +1,22 @@
-# recordLoader Melinda [![Build Status](https://travis-ci.org/NatLibFi/record-loader-prototypes.svg)](https://travis-ci.org/NatLibFi/record-loader-melinda) [![Test Coverage](https://codeclimate.com/github/NatLibFi/record-loader-melinda/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/record-loader-melinda/coverage)
+# Melinda-related modules for recordLoader [![Build Status](https://travis-ci.org/NatLibFi/record-loader-melinda.svg)](https://travis-ci.org/NatLibFi/record-loader-melinda) [![Test Coverage](https://codeclimate.com/github/NatLibFi/record-loader-melinda/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/record-loader-melinda/coverage)
 
-**IN DEVELOPMENT**
+[Melinda](https://melinda.kansalliskirjasto.fi)-related modules for [recordLoader](https://github.com/NatLibFi/record-loader).
 
-Melinda related modules for recordLoader
+## Development 
 
-## Usage
+Clone the sources and install the package using `npm`:
 
-### Installation
+```sh
+npm install
+```
 
-TODO
+Run the following NPM script to lint, test and check coverage of the code:
 
-### Configuration
+```javascript
 
-TODO
+npm run check
 
-### Running
-
-TODO
-
-## Examples
-
-TODO
+```
 
 ## License and copyright
 
