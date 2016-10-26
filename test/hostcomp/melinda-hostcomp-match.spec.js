@@ -2,13 +2,13 @@
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file. 
  *
- * Base prototypes of processors, converters, record store and record set for recordLoader
+ * Melinda-related modules for recordLoader
  *
  * Copyright (c) 2015-2016 University Of Helsinki (The National Library Of Finland)
  *
- * This file is part of record-loader-prototypes
+ * This file is part of record-loader-melinda
  *
- * record-loader-prototypes is free software: you can redistribute it and/or modify
+ * record-loader-melinda is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.

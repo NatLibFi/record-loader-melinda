@@ -1,6 +1,6 @@
 {
   "name": "record-loader-melinda",
-  "description": "Melinda related modules for recordLoader",
+  "description": "Melinda-related modules for recordLoader",
   "author": {
     "name": "The National Library of Finland"
   },
@@ -78,7 +78,7 @@
     "cover": "npm run test && istanbul check-coverage",
     "check": "npm run lint && npm run test && npm run cover",
     "travisci": "npm run check",
-    "generate-requirejs-config": "requirejs-configurator --npm --include-dev-deps > test/browser-main.js",
+    "generate-requirejs-config": "requirejs-configurator --npm -D > test/browser-main.js",
     "publish-to-npm": "npm run update-dependencies && npm publish"
   },
   "dependencies": {
