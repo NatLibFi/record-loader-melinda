@@ -86,7 +86,7 @@
     "es6-polyfills": "^1.1.0",
     "record-loader-prototypes": "^1.0.0",
     "marc-record-merge": "https://github.com/NatLibFi/marc-record-merge#simplify",
-    "merge": "https://github.com/natlibfi-arlehiko/merge#umd",
+    "merge": "https://github.com/natlibfi-arlehiko/js.merge#umd",
     "json-similarity": "https://github.com/NatLibFi/json-similarity#simplify",
     "melinda-api-client": "https://github.com/NatLibFi/melinda-api-client#stable",
     "marc-record-converters": "https://github.com/natlibfi/marc-record-converters",
