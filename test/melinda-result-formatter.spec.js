@@ -34,13 +34,13 @@
     define([
       'chai/chai',
       'es6-polyfills/lib/polyfills/promise',
-      '../lib/result-formatter/prototype'
+      '../lib/result-formatter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('es6-polyfills/lib/polyfills/promise'),
-      require('../lib/result-formatter/prototype')
+      require('../lib/result-formatter/melinda')
     );
   }
 

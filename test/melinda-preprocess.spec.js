@@ -35,20 +35,22 @@
       'chai/chai',
       'chai-as-promised',
       'es6-polyfills/lib/polyfills/promise',
-      '../../lib/processors/preprocess/prototype'
+      'record-loader-prototypes/lib/logger/prototype',
+      '../lib/processors/preprocess/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
       require('es6-polyfills/lib/polyfills/promise'),
-      require('../../lib/processors/preprocess/prototype')
+      require('record-loader-prototypes/lib/logger/prototype'),
+      require('../lib/processors/preprocess/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, Promise, processorFactory)
+function factory(chai, chaiAsPromised, Promise, loggerFactory, processorFactory)
 {
 
   'use strict';
@@ -61,35 +63,168 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
 
     describe('preprocess', function() {
 
+      function createProcessor()
+      {
+        return processorFactory({
+          validators: [{
+            name: 'sort-tag',
+            options: '500'
+          }]
+        });
+      }
+      
       describe('factory', function() {
 
         it('Should create the expected object', function() {
-          expect(processorFactory()).to.be.an('object')
+          expect(createProcessor()).to.be.an('object')
             .and.to.respondTo('setLogger')
             .and.to.respondTo('run');
         });
 
+        it('Should throw because creating the object fails', function() {
+          expect(processorFactory).to.throw(Error, /^Tag is not defined or is not a string$/);
+        });
+        
         describe('object', function() {
-
-          var processor = processorFactory();
 
           describe('#setLogger', function() {
 
             it('Should return itself', function() {
+
+              var processor = createProcessor();
+              
               expect(processor.setLogger()).to.eql(processor);
+
             });
 
           });
 
           describe('#run', function() {
 
+            var processor = createProcessor().setLogger(loggerFactory().createInstance('foobar'));
+
             it('Should return a Promise which resolves with an object', function() {
-              return processor.run().then(function(result) {
-                expect(result).to.be.an('object') /* jshint -W030 */;
+
+              var record = {
+                leader: undefined,
+                fields: [
+                  {
+                    tag: '500',
+                    subfields: [{
+                      code: 'a',
+                      value: 'foo'
+                    }]
+                  },
+                  {
+                    tag: '500',
+                    subfields: [{
+                      code: 'a',
+                      value: 'bar'
+                    }]
+                  },
+                  {
+                    tag: '700',
+                    subfields: [{
+                      code: 'a',
+                      value: 'foobar'
+                    }]
+                  }
+                ]
+              };
+
+              return processor.run(record).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.contain.all.keys(['record', 'preprocessDetails']) /* jshint -W030 */;
+                expect(result.record).to.eql(record);
+                expect(result.preprocessDetails).to.eql({
+                  failed: false,
+                  validators: [{
+                    name: 'sort-tag',
+                    validate: []
+                  }]                 
+                });
+
               });
+
             });
 
-            it('Should modify the record', function() {});
+            it('Should modify the record', function() {
+
+              var record = {
+                leader: undefined,
+                fields: [
+                  {
+                    tag: '500',
+                    subfields: [{
+                      code: 'a',
+                      value: 'foo'
+                    }]
+                  },           
+                  {
+                    tag: '700',
+                    subfields: [{
+                      code: 'a',
+                      value: 'foobar'
+                    }]
+                  },
+                  {
+                    tag: '500',
+                    subfields: [{
+                      code: 'a',
+                      value: 'bar'
+                    }]
+                  }
+                ]
+              };
+
+              return processor.run(record).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.contain.all.keys(['record', 'preprocessDetails']) /* jshint -W030 */;
+                expect(result.record).to.eql(Object.assign(record, {
+                  fields: [record.fields[1], record.fields[2],record.fields[0]]
+                }));
+                expect(result.preprocessDetails).to.eql({
+                  failed: false,
+                  validators: [{
+
+                    name: 'sort-tag',
+                    validate: [{
+                      field: {
+                        tag: '500',
+                        subfields: [{
+                          code: 'a',
+                          value: 'foo'
+                        }]
+                      },
+                      message: 'Field is not in correct position',
+                      type: 'warning'
+
+                    }],
+                    fix: [{
+                      
+                      field: {
+                        tag: '500',
+                        subfields: [{
+                          code: 'a',
+                          value: 'foo'
+                        }]
+                      },
+                      new: 2,
+                      old: 0,
+                      type: 'moveField'
+                      
+                    }]
+                  }]                 
+                });
+                
+              });
+            
+            });
+
+            /**
+             * @todo Only legal-term validator can be made to throw errors easily?
+             */
+            it.skip('Should reject because of errors');
             
           });
 

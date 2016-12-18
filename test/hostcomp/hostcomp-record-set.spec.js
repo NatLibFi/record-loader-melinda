@@ -34,19 +34,21 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      '../../lib/processors/merge/prototype'
+      'es6-polyfills/lib/polyfills/promise',
+      '../lib/hostcomp/record-set/hostcomp'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('../../lib/processors/merge/prototype')
+      require('es6-polyfills/lib/polyfills/promise'),
+      require('../lib/hostcomp/record-set/hostcomp')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, processorFactory)
+function factory(chai, chaiAsPromised, Promise, recordSetFactory)
 {
 
   'use strict';
@@ -54,45 +56,46 @@ function factory(chai, chaiAsPromised, processorFactory)
   var expect = chai.expect;
 
   chai.use(chaiAsPromised);
-  
-  describe('processors', function() {
 
-    describe('merge', function() {
+  describe('record-set', function() {
 
-      describe('factory', function() {
+    describe('factory', function() {
 
-        it('Should create the expected object', function() {
-          expect(processorFactory()).to.be.an('object')
-            .and.to.respondTo('setLogger')
-            .and.to.respondTo('run');
+      it('Should create the expected object', function() {
+        expect(recordSetFactory()).to.be.an('object')
+          .and.to.respondTo('setLogger')
+          .and.to.respondTo('initialize')
+          .and.to.respondTo('get');
+      });
+
+      describe('object', function() {
+
+        var record_set = recordSetFactory();
+
+        describe('#setLogger', function() {
+
+          it('Should return itself', function() {
+            expect(record_set.setLogger()).to.eql(record_set);
+          });
+
         });
 
-        describe('object', function() {
+        describe('#initialize', function() {
 
-          var processor = processorFactory();
-
-          describe('#setLogger', function() {
-
-            it('Should return itself', function() {
-              expect(processor.setLogger()).to.eql(processor);
-            });
-
+          it('Should return a Promise', function() {
+            expect(record_set.initialize()).to.be.an.instanceof(Promise);
           });
+          
+        });
 
-          describe('#run', function() {
+        describe('#get', function() {
 
-            it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
-
-                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'mergedRecords']);
-                expect(result.record).to.be.an('object');
-                expect(result.mergedRecords).to.be.an('array');
-
-              });
+          it('Should return a Promise which resolves with an array', function() {
+            return record_set.get().then(function(result) {
+              expect(result).to.be.an('array');
             });
-            
           });
-
+          
         });
 
       });

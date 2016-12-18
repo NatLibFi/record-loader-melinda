@@ -34,19 +34,21 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      '../../lib/processors/match/prototype'
+      'es6-polyfills/lib/polyfills/promise',
+      '../../lib/hostcomp/processors/preprocess/hostcomp'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('../../lib/processors/match/prototype')
+      require('es6-polyfills/lib/polyfills/promise'),
+      require('../../lib/hostcomp/processors/preprocess/hostcomp')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, processorFactory)
+function factory(chai, chaiAsPromised, Promise, processorFactory)
 {
 
   'use strict';
@@ -57,14 +59,13 @@ function factory(chai, chaiAsPromised, processorFactory)
   
   describe('processors', function() {
 
-    describe('match', function() {
+    describe('preprocess', function() {
 
       describe('factory', function() {
 
         it('Should create the expected object', function() {
           expect(processorFactory()).to.be.an('object')
             .and.to.respondTo('setLogger')
-            .and.to.respondTo('setReadRecordStore')
             .and.to.respondTo('run');
         });
 
@@ -80,24 +81,15 @@ function factory(chai, chaiAsPromised, processorFactory)
 
           });
 
-          describe('#setReadRecordStore', function() {
-
-            it('Should return itself', function() {
-              expect(processor.setReadRecordStore()).to.eql(processor);
-            });
-
-          });
-
           describe('#run', function() {
 
-            it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
-
-                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'matchedRecords']);
-                expect(result.matchedRecords).to.be.an('array');
-
+            it('Should return a Promise which resolves with an object', function() {
+              return processor.run().then(function(result) {
+                expect(result).to.be.an('object') /* jshint -W030 */;
               });
             });
+
+            it('Should modify the record', function() {});
             
           });
 

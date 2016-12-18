@@ -33,67 +33,69 @@
   if (typeof define === 'function' && define.amd) {
     define([
       'chai/chai',
-      'chai-as-promised',
       'es6-polyfills/lib/polyfills/promise',
-      '../lib/record-set/prototype'
+      '../../lib/hostcomp/result-formatter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
-      require('chai-as-promised'),
       require('es6-polyfills/lib/polyfills/promise'),
-      require('../lib/record-set/prototype')
+      require('../../lib/hostcomp/result-formatter/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, Promise, recordSetFactory)
+function factory(chai, Promise, resultFormatterFactory)
 {
 
   'use strict';
 
   var expect = chai.expect;
 
-  chai.use(chaiAsPromised);
-
-  describe('record-set', function() {
+  describe('result-formatter', function() {
 
     describe('factory', function() {
 
       it('Should create the expected object', function() {
-        expect(recordSetFactory()).to.be.an('object')
+        expect(resultFormatterFactory()).to.be.an('object')
+          .and.to.respondTo('setLevel')
           .and.to.respondTo('setLogger')
-          .and.to.respondTo('initialize')
-          .and.to.respondTo('get');
+          .and.to.respondTo('run');
       });
 
+      describe('#getLevels', function() {
+
+        it('Should return the expected object which is immutable', function() {
+          expect(resultFormatterFactory.getLevels()).to.have.all.keys(['statistics', 'recordMetaData', 'recordData']).and.to.be.frozen.and.to.be.sealed /* jshint -W030 */;
+        });
+
+      });
+      
       describe('object', function() {
 
-        var record_set = recordSetFactory();
+        var result_formatter = resultFormatterFactory();
 
         describe('#setLogger', function() {
 
           it('Should return itself', function() {
-            expect(record_set.setLogger()).to.eql(record_set);
+            expect(result_formatter.setLogger()).to.eql(result_formatter);
           });
 
         });
 
-        describe('#initialize', function() {
+        describe('#setLevel', function() {
+
+          it('Should return itself', function() {
+            expect(result_formatter.setLevel()).to.eql(result_formatter);
+          });
+
+        });
+
+        describe('#run', function() {
 
           it('Should return a Promise', function() {
-            expect(record_set.initialize()).to.be.an.instanceof(Promise);
-          });
-          
-        });
-
-        describe('#get', function() {
-
-          it('Should return a Promise which resolves with an array', function() {
-            return record_set.get().then(function(result) {
-              expect(result).to.be.an('array');
-            });
+            expect(result_formatter.run()).to.be.an.instanceof(Promise);
           });
           
         });

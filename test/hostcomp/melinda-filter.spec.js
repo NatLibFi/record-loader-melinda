@@ -35,14 +35,14 @@
       'chai/chai',
       'chai-as-promised',
       'es6-polyfills/lib/polyfills/promise',
-      '../../lib/processors/filter/prototype'
+      '../../lib/hostcomp/processors/filter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
       require('es6-polyfills/lib/polyfills/promise'),
-      require('../../lib/processors/filter/prototype')
+      require('../../lib/hostcomp/processors/filter/melinda')
     );
   }
 

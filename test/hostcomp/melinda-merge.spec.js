@@ -34,21 +34,19 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      'es6-polyfills/lib/polyfills/promise',
-      '../../lib/processors/preprocess/prototype'
+      '../../lib/hostcomp/processors/merge/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('es6-polyfills/lib/polyfills/promise'),
-      require('../../lib/processors/preprocess/prototype')
+      require('../../lib/hostcomp/processors/merge/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, Promise, processorFactory)
+function factory(chai, chaiAsPromised, processorFactory)
 {
 
   'use strict';
@@ -59,7 +57,7 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
   
   describe('processors', function() {
 
-    describe('preprocess', function() {
+    describe('merge', function() {
 
       describe('factory', function() {
 
@@ -83,13 +81,15 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
 
           describe('#run', function() {
 
-            it('Should return a Promise which resolves with an object', function() {
-              return processor.run().then(function(result) {
-                expect(result).to.be.an('object') /* jshint -W030 */;
+            it('Should return a Promise which resolves with the expected object', function() {
+              return processor.run({}).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'mergedRecords']);
+                expect(result.record).to.be.an('object');
+                expect(result.mergedRecords).to.be.an('array');
+
               });
             });
-
-            it('Should modify the record', function() {});
             
           });
 

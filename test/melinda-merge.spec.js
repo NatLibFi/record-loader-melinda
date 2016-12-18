@@ -34,13 +34,13 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      '../../lib/processors/merge/prototype'
+      '../lib/processors/merge/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('../../lib/processors/merge/prototype')
+      require('../lib/processors/merge/melinda')
     );
   }
 
@@ -81,18 +81,116 @@ function factory(chai, chaiAsPromised, processorFactory)
 
           describe('#run', function() {
 
-            it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
+            var input_record = {
+              fields: [
+                {
+                  tag: '001',
+                  value: 'foo'
+                },
+                {
+                  tag: '245',
+                  subfields: [{
+                    code: 'a',
+                    value: 'foobar'
+                  }]
+                }
+              ]
+            },
+            matched_records = [{
+              fields: [
+                {
+                  tag: '001',
+                  value: 'bar'
+                },
+                {
+                  tag: '245',
+                  subfields: [{
+                    code: 'a',
+                    value: 'foobar'
+                  }]
+                }
+              ]
+            }];
+            
+            it('Should resolve with a merged record that preferred the record store record', function() {
+              return processor.run(input_record, matched_records).then(function(result) {
 
                 expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'mergedRecords']);
                 expect(result.record).to.be.an('object');
-                expect(result.mergedRecords).to.be.an('array');
-
+                expect(result.record.toJsonObject()).to.eql({
+                  leader: undefined,
+                  fields: [
+                    {
+                      tag: '001',
+                      value: 'bar',
+                      fromPreferred: true,
+                      wasUsed: true
+                    },
+                    {
+                      tag: '245',
+                      subfields: [{
+                        code: 'a',
+                        value: 'foobar'
+                      }],
+                      fromPreferred: true,
+                      wasUsed: true
+                    }
+                  ]
+                });
+                expect(result.mergedRecords).to.be.an('array').and.to.have.length(1);
+                expect(result.mergedRecords).to.eql(matched_records);
+                
               });
             });
             
-          });
+            it('Should reject because multiple matches are not supported', function() {
+              return processor.run(input_record, [{}, {}]).catch(function(error) {
+                expect(error).to.be.an.instanceof(Error);
+                expect(error.message).to.match(/^Merging is only supported with one matched record$/);
+              });
+            });
 
+            it('Should resolve with a merged record that preferred the record set record', function() {
+              return processorFactory({
+                rank: {
+                  preferRecordSet: true
+                }
+              }).run(input_record, matched_records).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'mergedRecords']);
+                expect(result.record).to.be.an('object');
+                expect(result.record.toJsonObject()).to.eql({
+                  leader: undefined,
+                  fields: [
+                    {
+                      tag: '001',
+                      value: 'foo',
+                      fromPreferred: true,
+                      wasUsed: true
+                    },
+                    {
+                      tag: '245',
+                      subfields: [{
+                        code: 'a',
+                        value: 'foobar'
+                      }],
+                      fromPreferred: true,
+                      wasUsed: true
+                    }
+                  ]
+                });
+                expect(result.mergedRecords).to.be.an('array').and.to.have.length(1);
+                expect(result.mergedRecords).to.eql(matched_records);
+                
+              });
+            });
+
+            it('Should resolve with a merged record that ranked the preferred record');
+
+            it('Should resolve with a merged record and run validators');
+            
+          });
+          
         });
 
       });

@@ -34,19 +34,27 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      '../../lib/processors/match/prototype'
+      'es6-polyfills/lib/polyfills/promise',
+      'marc-record-js',
+      'record-loader-prototypes/lib/logger/prototype',
+      'record-loader-prototypes/lib/record-store/prototype',
+      '../lib/processors/match/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('../../lib/processors/match/prototype')
+      require('es6-polyfills/lib/polyfills/promise'),
+      require('marc-record-js'),
+      require('record-loader-prototypes/lib/logger/prototype'),
+      require('record-loader-prototypes/lib/record-store/prototype'),
+      require('../lib/processors/match/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, processorFactory)
+function factory(chai, chaiAsPromised, Promise, MarcRecord, loggerFactory, recordStoreFactory, processorFactory)
 {
 
   'use strict';
@@ -65,17 +73,20 @@ function factory(chai, chaiAsPromised, processorFactory)
           expect(processorFactory()).to.be.an('object')
             .and.to.respondTo('setLogger')
             .and.to.respondTo('setReadRecordStore')
+            .and.to.respondTo('findMatchCandidates')
             .and.to.respondTo('run');
         });
 
         describe('object', function() {
 
-          var processor = processorFactory();
-
           describe('#setLogger', function() {
 
             it('Should return itself', function() {
+
+              var processor = processorFactory();
+
               expect(processor.setLogger()).to.eql(processor);
+
             });
 
           });
@@ -83,30 +94,134 @@ function factory(chai, chaiAsPromised, processorFactory)
           describe('#setReadRecordStore', function() {
 
             it('Should return itself', function() {
+
+              var processor = processorFactory();
+              
               expect(processor.setReadRecordStore()).to.eql(processor);
+
             });
 
           });
 
-          describe('#run', function() {
+          describe('#findMatchCandidates', function() {
 
-            it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
-
-                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'matchedRecords']);
-                expect(result.matchedRecords).to.be.an('array');
-
+            it('Should resolve with an array of records', function() {
+              return processorFactory().findMatchCandidates({}).then(function(result) {
+                expect(result).to.be.an('array');
               });
             });
             
           });
+          
+          describe('#run', function() {
+            
+            var processor = processorFactory({
 
+              match: {
+                treshold: 50,
+                tests: []
+              }
+              
+            }).setLogger(loggerFactory().createInstance('foobar'))
+              .setReadRecordStore(recordStoreFactory().read),
+            processor_rank = processorFactory({
+              
+              match: {
+                treshold: 50,
+                tests: []
+              },
+              rank: {
+                features: []
+              }
+
+            }).setLogger(loggerFactory().createInstance('foobar'))
+              .setReadRecordStore(recordStoreFactory().read);            
+
+            processor.findMatchCandidates = processor_rank.findMatchCandidates = function(record) {
+              return Promise.resolve([
+                new MarcRecord({
+                  fields: [{
+                    tag: '001',
+                    value: 'foo'
+                  }]
+                }),
+                new MarcRecord({
+                  fields: [{
+                    tag: '001',
+                    value: 'bar'
+                  }]
+                })
+              ]);
+            };
+
+            it('Should return a Promise which resolves with the expected object', function() {
+           
+              var input_record = {
+                fields: [{
+                  tag: '001',
+                  value: 'foobar'
+                }]
+              };
+
+              return processor.run(input_record).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.have.all.keys(['matchedRecords', 'matchDetails']);
+                expect(result.matchedRecords).to.be.an('array').and.to.have.length(2);
+                expect(result.matchDetails).to.be.an('array').and.to.eql([
+                  {
+                    match: true,
+                    points: 50,
+                    tests: []
+                  },
+                  {
+                    match: true,
+                    points: 50,
+                    tests: []
+                  }
+                ]);
+
+              });
+
+            });
+
+            it('Should resolve with a single match because ranking is used', function() {
+
+              var input_record = {
+                fields: [{
+                  tag: '001',
+                  value: 'foobar'
+                }]
+              };
+
+              return processor_rank.run(input_record).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.have.all.keys(['matchedRecords', 'matchDetails']);
+                expect(result.matchedRecords).to.be.an('array').and.to.have.length(1);
+                expect(result.matchDetails).to.be.an('array').and.to.eql([
+                  {
+                    match: true,
+                    points: 50,
+                    tests: []
+                  },
+                  {
+                    match: true,
+                    points: 50,
+                    tests: []
+                  }
+                ]);
+
+              });
+
+            });
+
+          });
+          
         });
-
+        
       });
-
+      
     });
-
+    
   });
-
+  
 }

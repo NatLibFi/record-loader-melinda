@@ -35,14 +35,14 @@
       'chai/chai',
       'chai-as-promised',
       'es6-polyfills/lib/polyfills/promise',
-      '../../lib/hooks/related-records-retrieved/prototype'
+      '../../lib/hostcomp/hooks/related-records-retrieved/hostcomp'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
       require('es6-polyfills/lib/polyfills/promise'),
-      require('../../lib/hooks/related-records-retrieved/prototype')
+      require('../../lib/hostcomp/hooks/related-records-retrieved/hostcomp')
     );
   }
 
