@@ -4,7 +4,7 @@
  *
  * Melinda-related modules for recordLoader
  *
- * Copyright (c) 2015-2016 University Of Helsinki (The National Library Of Finland)
+ * Copyright (c) 2015-2017 University Of Helsinki (The National Library Of Finland)
  *
  * This file is part of record-loader-melinda
  *
