@@ -90,7 +90,7 @@
     "marc-record-rank": "^1.0.0",
     "marc-record-converters": "^1.0.0",
     "melinda-api-client": "^1.1.0",
-    "marc-record-validators-melinda": "^1.0.0"
+    "marc-record-validators-melinda": "^1.0.0",
     "cli-wrap": "^1.0.0",
     "merge": "https://github.com/natlibfi-arlehiko/js.merge#umd"
   },
