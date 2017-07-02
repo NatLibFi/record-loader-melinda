@@ -34,19 +34,23 @@
     define([
       'chai/chai',
       'chai-as-promised',
+      'marc-record-js',
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
       '../../lib/hostcomp/processors/match/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
+      require('marc-record-js'),
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
       require('../../lib/hostcomp/processors/match/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, processorFactory)
+function factory(chai, chaiAsPromised, MarcRecord, Promise, processorFactory)
 {
 
   'use strict';
@@ -57,7 +61,7 @@ function factory(chai, chaiAsPromised, processorFactory)
   
   describe('processors', function() {
 
-    describe('match', function() {
+    describe('hostcomp-match', function() {
 
       describe('factory', function() {
 
@@ -89,13 +93,33 @@ function factory(chai, chaiAsPromised, processorFactory)
           });
 
           describe('#run', function() {
-
+            
+            var processor2 = processorFactory()
+              .setLogger({
+                info: function() {},
+                debug: function() {},
+                error: function() {},
+                warning: function() {}
+              })
+              .setReadRecordStore(function() {
+                return Promise.resolve([]);
+              });
+            
             it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
-
-                expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'matchedRecords']);
-                expect(result.matchedRecords).to.be.an('array');
-
+              
+              return processor2.run({
+                record: new MarcRecord({
+                  fields: [{
+                    tag: '001',
+                    value: 'foo'
+                  }]
+                })
+              }).then(function(result) {
+                expect(result).to.be.an('object');
+                expect(result).to.eql({
+                  matchedRecords: [],
+                  matchDetails: []
+                });
               });
             });
             

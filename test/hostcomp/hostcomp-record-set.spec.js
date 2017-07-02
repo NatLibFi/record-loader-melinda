@@ -34,15 +34,15 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      'es6-polyfills/lib/polyfills/promise',
-      '../lib/hostcomp/record-set/hostcomp'
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
+      '../../lib/hostcomp/record-set/hostcomp'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('es6-polyfills/lib/polyfills/promise'),
-      require('../lib/hostcomp/record-set/hostcomp')
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
+      require('../../lib/hostcomp/record-set/hostcomp')
     );
   }
 
@@ -57,7 +57,7 @@ function factory(chai, chaiAsPromised, Promise, recordSetFactory)
 
   chai.use(chaiAsPromised);
 
-  describe('record-set', function() {
+  describe('hostcomp-record-set', function() {
 
     describe('factory', function() {
 
@@ -70,20 +70,54 @@ function factory(chai, chaiAsPromised, Promise, recordSetFactory)
 
       describe('object', function() {
 
-        var record_set = recordSetFactory();
-
         describe('#setLogger', function() {
-
           it('Should return itself', function() {
+            var record_set = recordSetFactory();
             expect(record_set.setLogger()).to.eql(record_set);
           });
-
         });
 
         describe('#initialize', function() {
 
           it('Should return a Promise', function() {
-            expect(record_set.initialize()).to.be.an.instanceof(Promise);
+            expect(recordSetFactory().initialize()).to.be.an.instanceof(Promise);
+          });
+          
+          it('Should reject because the bundle is invalid', function() {
+            return recordSetFactory().initialize().catch(function(error) {
+              expect(error).to.be.an('error');
+              expect(error.message).to.equal('Invalid bundle');
+            });
+          });
+          
+          it('Should reject because the bundle record format is unsupported', function() {
+            return recordSetFactory().initialize({
+              melindaHostId: 'foo',
+              records: 'foo',
+              format: 'bar'
+            }).catch(function(error) {
+              expect(error).to.be.an('error');
+              expect(error.message).to.equal('Unsupported format: bar');
+            });
+          });
+          
+          it('Should initialize the bundle using the record data as-is', function() {
+            return recordSetFactory().initialize({
+              melindaHostId: 'foo',
+              records: []
+            }).then(function(result) {
+              expect(result).to.be.an('undefined');
+            });
+          });
+          
+          it('Should initialize the bundle and convert the record data', function() {
+            return recordSetFactory().initialize({
+              melindaHostId: 'foo',
+              format: 'marc21slimXML',
+              records: '<?xml version="1.0" encoding="UTF-8"?><collection firstRecordNumber="1" allRecordsCount="2"><record><leader>00000cam^a22000004i^4500</leader><controlfield tag="001">000006000</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">foo</subfield></datafield></record><record><leader>00000caa^a22000004i^4500</leader><controlfield tag="001">000006001</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">bar</subfield></datafield><datafield tag="773" ind1="0" ind2=" "><subfield code="w">(FI-MELINDA)000006000</subfield></datafield></record></collection>'
+            }).then(function(result) {
+              expect(result).to.be.an('undefined');
+            });
           });
           
         });
@@ -91,8 +125,115 @@ function factory(chai, chaiAsPromised, Promise, recordSetFactory)
         describe('#get', function() {
 
           it('Should return a Promise which resolves with an array', function() {
-            return record_set.get().then(function(result) {
-              expect(result).to.be.an('array');
+            var record_set = recordSetFactory();
+
+            return record_set.initialize({
+              melindaHostId: 'foo',
+              records: []
+            }).then(function() {
+              return record_set.get().then(function(result) {
+                expect(result).to.be.an('array');
+              });
+            });
+          });
+          
+          it('Should resolve with records from the bundle', function() {
+            var record_set = recordSetFactory();
+            
+            return record_set.initialize({
+              melindaHostId: 'foo',
+              records: ['bar']
+            }).then(function(result) {
+              return record_set.get().then(function(result) {
+                expect(result).to.be.an('array');
+                expect(result).to.eql([{
+                  melindaHostId: 'foo',
+                  record: 'bar'
+                }]);
+              });
+            });
+          });
+          
+          it('Should resolve with converted record data from the bundle', function() {
+            var record_set = recordSetFactory();
+            
+            return record_set.initialize({
+              melindaHostId: 'foo',
+              format: 'marc21slimXML',
+              records: '<?xml version="1.0" encoding="UTF-8"?><collection firstRecordNumber="1" allRecordsCount="2"><record><leader>00000cam^a22000004i^4500</leader><controlfield tag="001">000006000</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">foo</subfield></datafield></record><record><leader>00000caa^a22000004i^4500</leader><controlfield tag="001">000006001</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">bar</subfield></datafield><datafield tag="773" ind1="0" ind2=" "><subfield code="w">(FI-MELINDA)000006000</subfield></datafield></record></collection>'
+            }).then(function() {
+              return record_set.get().then(function(result) {
+                expect(result).to.be.an('array');
+                expect(result).to.eql([
+                  {
+                    melindaHostId: 'foo',
+                    record: {
+                      leader: '00000cam^a22000004i^4500',
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '000006000'
+                        },
+                        {
+                          tag: '245',
+                          ind1: ' ',
+                          ind2: ' ',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    melindaHostId: 'foo',
+                    record: {
+                      leader: '00000caa^a22000004i^4500',
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '000006001'
+                        },
+                        {
+                          tag: '245',
+                          ind1: ' ',
+                          ind2: ' ',
+                          subfields: [{
+                            code: 'a',
+                            value: 'bar'
+                          }]
+                        },
+                        {
+                          tag: '773',
+                          ind1: '0',
+                          ind2: ' ',
+                          subfields: [{
+                            code: 'w',
+                            value: '(FI-MELINDA)000006000'
+                          }]
+                        }
+                      ]
+                    }
+                  }
+                ]);
+              });
+            });
+          });
+          
+          it('Should resolve with undefined because the bundle has been already retrieved', function() {
+            var record_set = recordSetFactory();
+            
+            return record_set.initialize({
+              melindaHostId: 'foo',
+              records: []
+            }).then(function() {
+              return record_set.get().then(function(result) {
+                expect(result).to.be.an('array');
+                return record_set.get().then(function(result) {
+                  expect(result).to.be.an('undefined');
+                });
+              });
             });
           });
           

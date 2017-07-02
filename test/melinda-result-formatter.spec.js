@@ -33,13 +33,13 @@
   if (typeof define === 'function' && define.amd) {
     define([
       'chai/chai',
-      'es6-polyfills/lib/polyfills/promise',
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
       '../lib/result-formatter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
-      require('es6-polyfills/lib/polyfills/promise'),
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
       require('../lib/result-formatter/melinda')
     );
   }
@@ -56,14 +56,34 @@ function factory(chai, Promise, resultFormatterFactory)
   describe('result-formatter', function() {
 
     describe('factory', function() {
-
+      
       it('Should create the expected object', function() {
-        expect(resultFormatterFactory()).to.be.an('object')
-          .and.to.respondTo('setLevel')
-          .and.to.respondTo('setLogger')
-          .and.to.respondTo('run');
+        expect(resultFormatterFactory({properties: []})).to.be.an('object')
+        .and.to.respondTo('setLevel')
+        .and.to.respondTo('setLogger')
+        .and.to.respondTo('run');
       });
-
+      
+      it('Should throw because invalid conversion target is specified', function() {
+        expect(function() {
+          resultFormatterFactory({properties: [], convert: 'foo'});
+        }).to.throw(Error, /^Invalid conversion target$/);
+      });
+      
+      it('Should throw because parameter \'properties\' is not defined', function() {
+        expect(resultFormatterFactory).to.throw(Error, /^Parameter \'properties\' is not an array$/);
+        
+      });
+      it('Should throw because invalid of MARC conversion format', function() {
+        expect(function() {
+          resultFormatterFactory({
+            properties: ['foo'],
+            convert: resultFormatterFactory.CONVERSIONS.marc,
+            format: 'foo'
+          });
+        }).to.throw(Error, /^No converter found for format \'foo\'$/);
+      });
+      
       describe('#getLevels', function() {
 
         it('Should return the expected object which is immutable', function() {
@@ -74,7 +94,9 @@ function factory(chai, Promise, resultFormatterFactory)
       
       describe('object', function() {
 
-        var result_formatter = resultFormatterFactory();
+        var result_formatter = resultFormatterFactory({
+          properties: []
+        });
 
         describe('#setLogger', function() {
 
@@ -93,9 +115,149 @@ function factory(chai, Promise, resultFormatterFactory)
         });
 
         describe('#run', function() {
-
+          
           it('Should return a Promise', function() {
             expect(result_formatter.run()).to.be.an.instanceof(Promise);
+          });
+          
+          it('Should resolve with the input results', function() {
+            return result_formatter.run({
+              records: [{
+                record: {
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }
+              }]
+            }).then(function(result) {
+              expect(result).to.eql({
+                records: [{
+                  record: {
+                    fields: [{
+                      tag: '001',
+                      value: 'foobar'
+                    }]
+                  }
+                }]
+              });
+            });
+          });
+          
+          it('Should convert the record data to record ids', function() {
+            return resultFormatterFactory({
+              properties: ['record'],
+              convert: resultFormatterFactory.CONVERSIONS.id
+            }).run({
+              records: [{
+                foo: 'bar',
+                record: {
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }
+              }]
+            }).then(function(result) {
+              expect(result).to.eql({
+                records: [{
+                  foo: 'bar',
+                  record: 'foobar'
+                }]
+              });
+            });
+          });
+          
+          it('Should convert mergedRecords to record ids', function() {
+            return resultFormatterFactory({
+              properties: ['mergedRecords'],
+              convert: resultFormatterFactory.CONVERSIONS.id
+            }).run({
+              records: [{
+                mergedRecords: [{
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }],
+                record: {
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }
+              }]
+            }).then(function(result) {
+              expect(result).to.eql({
+                records: [{
+                  mergedRecords: ['foobar'],
+                  record: {
+                    fields: [{
+                      tag: '001',
+                      value: 'foobar'
+                    }]
+                  }
+                }]
+              });
+            });
+          });
+          
+          it('Should convert the record data to MARC', function() {
+            return resultFormatterFactory({
+              properties: ['record'],
+              convert: resultFormatterFactory.CONVERSIONS.marc,
+              format: 'marc21slimXML'
+            }).run({
+              records: [{
+                record: {
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }
+              }]
+            }).then(function(result) {
+              expect(result).to.eql({
+                records: [{
+                  record: '<record xmlns="http://www.loc.gov/MARC21/slim"><leader>undefined</leader><controlfield tag="001">foobar</controlfield></record>'
+                }]
+              });
+            });
+          });
+          
+          it('Should convert mergedRecords to MARC', function() {
+            return resultFormatterFactory({
+              properties: ['mergedRecords'],
+              convert: resultFormatterFactory.CONVERSIONS.marc,
+              format: 'marc21slimXML'
+            }).run({
+              records: [{
+                mergedRecords: [{
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }],
+                record: {
+                  fields: [{
+                    tag: '001',
+                    value: 'foobar'
+                  }]
+                }
+              }]
+            }).then(function(result) {
+              expect(result).to.eql({
+                records: [{
+                  mergedRecords: ['<record xmlns="http://www.loc.gov/MARC21/slim"><leader>undefined</leader><controlfield tag="001">foobar</controlfield></record>'],
+                  record: {
+                    fields: [{
+                      tag: '001',
+                      value: 'foobar'
+                    }]
+                  }
+                }]
+              });
+            });
           });
           
         });

@@ -34,21 +34,23 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      'es6-polyfills/lib/polyfills/promise',
-      '../../lib/hostcomp/processors/preprocess/hostcomp'
+      'marc-record-js',
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
+      '../../lib/hostcomp/processors/preprocess/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('es6-polyfills/lib/polyfills/promise'),
-      require('../../lib/hostcomp/processors/preprocess/hostcomp')
+      require('marc-record-js'),
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
+      require('../../lib/hostcomp/processors/preprocess/melinda')
     );
   }
 
-}(this, factory));
+}(this, factory));  
 
-function factory(chai, chaiAsPromised, Promise, processorFactory)
+function factory(chai, chaiAsPromised, MarcRecord, Promise, processorFactory)
 {
 
   'use strict';
@@ -59,38 +61,58 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
   
   describe('processors', function() {
 
-    describe('preprocess', function() {
+    describe('hostcomp-preprocess', function() {
+      
+      
+      function createProcessor()
+      {
+        return processorFactory({
+          validators: [{
+            name: 'sort-tag',
+            options: '500'
+          }]
+        }).setLogger({
+          info: function() {},
+          debug: function() {}
+        });
+      }
 
       describe('factory', function() {
 
         it('Should create the expected object', function() {
-          expect(processorFactory()).to.be.an('object')
+          expect(createProcessor()).to.be.an('object')
             .and.to.respondTo('setLogger')
             .and.to.respondTo('run');
         });
 
         describe('object', function() {
-
-          var processor = processorFactory();
-
           describe('#setLogger', function() {
 
             it('Should return itself', function() {
+              var processor = createProcessor();
               expect(processor.setLogger()).to.eql(processor);
             });
-
           });
 
           describe('#run', function() {
-
             it('Should return a Promise which resolves with an object', function() {
-              return processor.run().then(function(result) {
-                expect(result).to.be.an('object') /* jshint -W030 */;
+              return createProcessor().run({
+                record: new MarcRecord({
+                  fields: [{
+                    tag: '245',
+                    subfields: [{
+                      code: 'a',
+                      value: 'foo'
+                    }]
+                  }]
+                })
+              }).then(function(result) {
+                expect(result).to.be.an('object');
               });
             });
-
-            it('Should modify the record', function() {});
             
+
+            it.skip('Should modify the record');
           });
 
         });

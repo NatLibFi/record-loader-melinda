@@ -34,16 +34,16 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      'es6-polyfills/lib/polyfills/promise',
-      'record-loader-prototypes/lib/logger/prototype',
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
+      '@natlibfi/record-loader-prototypes/lib/logger/prototype',
       '../lib/processors/preprocess/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('es6-polyfills/lib/polyfills/promise'),
-      require('record-loader-prototypes/lib/logger/prototype'),
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
+      require('@natlibfi/record-loader-prototypes/lib/logger/prototype'),
       require('../lib/processors/preprocess/melinda')
     );
   }

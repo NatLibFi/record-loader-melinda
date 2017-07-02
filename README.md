@@ -1,4 +1,4 @@
-# Melinda-related modules for recordLoader [![NPM Version](https://img.shields.io/npm/v/record-loader-melinda.svg)](https://npmjs.org/package/record-loader-melinda) [![Build Status](https://travis-ci.org/NatLibFi/record-loader-melinda.svg)](https://travis-ci.org/NatLibFi/record-loader-melinda) [![Test Coverage](https://codeclimate.com/github/NatLibFi/record-loader-melinda/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/record-loader-melinda/coverage)
+# Melinda-related modules for recordLoader [![NPM Version](https://img.shields.io/npm/v/@natlibfi/record-loader-melinda.svg)](https://npmjs.org/package/@natlibfi/record-loader-melinda) [![Build Status](https://travis-ci.org/NatLibFi/record-loader-melinda.svg)](https://travis-ci.org/NatLibFi/record-loader-melinda) [![Test Coverage](https://codeclimate.com/github/NatLibFi/record-loader-melinda/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/record-loader-melinda/coverage)
 
 [Melinda](https://melinda.kansalliskirjasto.fi)-related modules for [recordLoader](https://github.com/NatLibFi/record-loader).
 

@@ -34,14 +34,14 @@
     define([
       'chai/chai',
       'chai-as-promised',
-      'es6-polyfills/lib/polyfills/promise',
+      '@natlibfi/es6-polyfills/lib/polyfills/promise',
       '../../lib/hostcomp/processors/filter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
-      require('es6-polyfills/lib/polyfills/promise'),
+      require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
       require('../../lib/hostcomp/processors/filter/melinda')
     );
   }
@@ -59,7 +59,7 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
   
   describe('processors', function() {
 
-    describe('filter', function() {
+    describe('hostcomp-filter', function() {
 
       describe('factory', function() {
 
@@ -84,11 +84,56 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
           describe('#run', function() {
 
             it('Should return a Promise which resolves with a boolean', function() {
-              return processor.run().then(function(result) {
-                expect(result).to.be.an('object').and.to.contain.all.keys({
-                  passes: true
+
+              return processor.run({
+                melindaHostId: 'foo',
+                record: {
+                  fields: [
+                    {
+                      tag: '005',
+                      value: 'foo'
+                    },
+                    {
+                      tag: '245',
+                      subfields: [{
+                        code: 'a',
+                        value: 'bar'
+                      }]
+                    }
+                  ]
+                }
+              }).then(function(result) {
+
+                expect(result).to.be.an('object').and.to.eql({
+                  passes: false
                 });
-              });
+                
+                return processor.run({
+                  melindaHostId: 'foo',
+                  record: {
+                    fields: [
+                      {
+                        tag: '001',
+                        value: 'foo'
+                      },
+                      {
+                        tag: '245',
+                        subfields: [{
+                          code: 'a',
+                          value: 'bar'
+                        }]
+                      }
+                    ]
+                  }
+                }).then(function(result) {
+                  
+                  expect(result).to.be.an('object').and.to.eql({
+                    passes: true
+                  });
+                  
+                });
+                
+              });              
             });
             
           });

@@ -34,19 +34,21 @@
     define([
       'chai/chai',
       'chai-as-promised',
+      'marc-record-js',
       '../../lib/hostcomp/processors/merge/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory(
       require('chai'),
       require('chai-as-promised'),
+      require('marc-record-js'),
       require('../../lib/hostcomp/processors/merge/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, processorFactory)
+function factory(chai, chaiAsPromised, MarcRecord, processorFactory)
 {
 
   'use strict';
@@ -57,7 +59,7 @@ function factory(chai, chaiAsPromised, processorFactory)
   
   describe('processors', function() {
 
-    describe('merge', function() {
+    describe('hostcomp-merge', function() {
 
       describe('factory', function() {
 
@@ -82,12 +84,12 @@ function factory(chai, chaiAsPromised, processorFactory)
           describe('#run', function() {
 
             it('Should return a Promise which resolves with the expected object', function() {
-              return processor.run({}).then(function(result) {
-
+              return processor.run(new MarcRecord({
+                fields: []
+              }), []).then(function(result) {
                 expect(result).to.be.an('object').and.to.contain.all.keys(['record' ,'mergedRecords']);
                 expect(result.record).to.be.an('object');
                 expect(result.mergedRecords).to.be.an('array');
-
               });
             });
             
