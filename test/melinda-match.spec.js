@@ -117,7 +117,7 @@ function factory(chai, chaiAsPromised, Promise, MarcRecord, loggerFactory, recor
             
             var processor = processorFactory({
               
-              match: {
+              matching: {
                 treshold: 50,
                 tests: []
               }
@@ -126,7 +126,7 @@ function factory(chai, chaiAsPromised, Promise, MarcRecord, loggerFactory, recor
             .setReadRecordStore(recordStoreFactory().read),
             processor_rank = processorFactory({
               
-              match: {
+              matching: {
                 treshold: 50,
                 tests: []
               },

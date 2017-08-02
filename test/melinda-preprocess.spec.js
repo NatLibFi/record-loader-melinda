@@ -63,9 +63,9 @@ function factory(chai, chaiAsPromised, Promise, loggerFactory, processorFactory)
 
     describe('preprocess', function() {
 
-      function createProcessor()
+      function createProcessor(parameters)
       {
-        return processorFactory({
+        return processorFactory(parameters || {
           validators: [{
             name: 'sort-tag',
             options: '500'
@@ -79,10 +79,6 @@ function factory(chai, chaiAsPromised, Promise, loggerFactory, processorFactory)
           expect(createProcessor()).to.be.an('object')
             .and.to.respondTo('setLogger')
             .and.to.respondTo('run');
-        });
-
-        it('Should throw because creating the object fails', function() {
-          expect(processorFactory).to.throw(Error, /^Tag is not defined or is not a string$/);
         });
         
         describe('object', function() {
@@ -132,18 +128,9 @@ function factory(chai, chaiAsPromised, Promise, loggerFactory, processorFactory)
                 ]
               };
 
-              return processor.run(record).then(function(result) {
-
-                expect(result).to.be.an('object').and.to.contain.all.keys(['record', 'preprocessDetails']) /* jshint -W030 */;
+              return createProcessor({}).setLogger(loggerFactory().createInstance('foobar')).run(record).then(function(result) {
+                expect(result).to.be.an('object').and.to.contain.all.keys(['record']) /* jshint -W030 */;
                 expect(result.record).to.eql(record);
-                expect(result.preprocessDetails).to.eql({
-                  failed: false,
-                  validators: [{
-                    name: 'sort-tag',
-                    validate: []
-                  }]                 
-                });
-
               });
 
             });
