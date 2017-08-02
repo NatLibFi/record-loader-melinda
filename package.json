@@ -66,7 +66,7 @@
     "url": "git@github.com:NatLibFi/record-loader-melinda.git"
   },
   "license": "AGPL-3.0+",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bin": {
     "merged-records-to-files": "./bin/merged-records-to-files"
   },
