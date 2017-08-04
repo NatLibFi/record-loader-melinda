@@ -1230,266 +1230,118 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
                 });
               });
               
-              describe('#checkDifference', function() {
-                it('Should reject because there were too many extraneous records in the input records sets', function() {
-                  var hook2 = hookFactory({
-                    difference: {
-                      recordSet: 0
-                    }
-                  }).setRecordStore({
-                    read: function() {
-                      return Promise.resolve([
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22345'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'foo'
-                              }]
-                            }
-                          ]
-                        }),
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22346'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'bar'
-                              }]
-                            },
-                            {
-                              tag: '773'
-                            }
-                          ]
-                        })
-                      ]);
-                    }
-                  });
-                  return hook2.run([
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12345'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'foo'
-                            }]
-                          }
-                        ]
-                      }),
-                      matchedRecords: [{
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '22345'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'foo'
-                            }]
-                          }
-                        ]
-                      }]
-                    },
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12346'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'bar'
-                            }]
-                          }
-                        ]
-                      }),
-                      matchedRecords: [{
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '22346'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'bar'
-                            }]
-                          },
-                          {
-                            tag: '773'
-                          }
-                        ]
-                      }]
-                    },
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12347'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'fubar'
-                            }]
-                          }
-                        ]
-                      }),
-                      matchedRecords: [{
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '22346'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'bar'
-                            }]
-                          },
-                          {
-                            tag: '773'
-                          }
-                        ]
-                      }]
-                    }
-                  ]).then(function() {
-                    throw new Error();
-                  }, function(result) {
-                    expect(result).to.be.an('array');
-                    expect(result).to.have.length(3);
-                    expect(result[0].failed).to.be.true /* jshint -W030 */;
-                    expect(result[0].message).to.equal('Too many extraneous input records in the host-component set');
-                  });
+              it('Should reject because there are non-unique matches for records', function() {
+                var hook2 = hookFactory().setRecordStore({
+                  read: function() {
+                    return Promise.resolve([new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    })]);
+                  }
                 });
-                
-                it('Should reject because there were too many extraneous records in record store set', function() {
-                  var hook2 = hookFactory({
-                    difference: {
-                      recordStore: 0
-                    }
-                  }).setRecordStore({
-                    read: function() {
-                      return Promise.resolve([
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22345'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'foo'
-                              }]
-                            }
-                          ]
-                        }),
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22346'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'bar'
-                              }]
-                            },
-                            {
-                              tag: '773'
-                            }
-                          ]
-                        }),
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22347'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'bar'
-                              }]
-                            },
-                            {
-                              tag: '773'
-                            }
-                          ]
-                        }),
-                        new MarcRecord({
-                          fields: [
-                            {
-                              tag: '001',
-                              value: '22348'
-                            },
-                            {
-                              tag: '245',
-                              subfields: [{
-                                code: 'a',
-                                value: 'bar'
-                              }]
-                            },
-                            {
-                              tag: '773'
-                            }
-                          ]
-                        })
-                      ]);
-                    }
-                  });
-                  return hook2.run([
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12345'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'foo'
-                            }]
-                          }
-                        ]
-                      }),
-                      matchedRecords: [{
+                return hook2.run([
+                  {
+                    melindaHostId: 'foo',
+                    record: new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }),
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }]
+                  },
+                  {
+                    melindaHostId: 'foo',
+                    record: new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12346'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'bar'
+                          }]
+                        }
+                      ]
+                    }),
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }]
+                  }
+                ]).then(function() {
+                  throw new Error();
+                }, function(result) {
+                  expect(result).to.be.an('array');
+                  expect(result).to.have.length(2);
+                  expect(result[0].failed).to.be.true /* jshint -W030 */;
+                  expect(result[1].failed).to.be.true /* jshint -W030 */;
+                  expect(result[0].message).to.equal('Only unique matches are allowed');
+                  expect(result[1].message).to.equal('Only unique matches are allowed');
+                });
+              });
+            });
+            
+            describe('#checkDifference', function() {
+              it.skip('Should reject because there were too many extraneous records in the input records set');
+              
+              it('Should reject because there were too many extraneous records in record store set', function() {
+                var hook2 = hookFactory({
+                  difference: {
+                    recordStore: 0
+                  }
+                }).setRecordStore({
+                  read: function() {
+                    return Promise.resolve([
+                      new MarcRecord({
                         fields: [
                           {
                             tag: '001',
@@ -1503,26 +1355,8 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
                             }]
                           }
                         ]
-                      }]
-                    },
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12346'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'bar'
-                            }]
-                          }
-                        ]
                       }),
-                      matchedRecords: [{
+                      new MarcRecord({
                         fields: [
                           {
                             tag: '001',
@@ -1539,26 +1373,8 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
                             tag: '773'
                           }
                         ]
-                      }]
-                    },
-                    {
-                      melindaHostId: 'foo',
-                      record: new MarcRecord({
-                        fields: [
-                          {
-                            tag: '001',
-                            value: '12347'
-                          },
-                          {
-                            tag: '245',
-                            subfields: [{
-                              code: 'a',
-                              value: 'fubar'
-                            }]
-                          }
-                        ]
                       }),
-                      matchedRecords: [{
+                      new MarcRecord({
                         fields: [
                           {
                             tag: '001',
@@ -1568,26 +1384,150 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
                             tag: '245',
                             subfields: [{
                               code: 'a',
-                              value: 'fubar'
+                              value: 'bar'
                             }]
                           },
                           {
                             tag: '773'
                           }
                         ]
-                      }]
-                    }
-                  ]).then(function() {
-                    throw new Error();
-                  }, function(result) {
-                    expect(result).to.be.an('array');
-                    expect(result).to.have.length(3);
-                    expect(result[0].failed).to.be.true /* jshint -W030 */;
-                    expect(result[0].message).to.equal('Too many extraneous record store records in the host-component set');
-                  });
+                      }),
+                      new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '22348'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773'
+                          }
+                        ]
+                      })
+                    ]);
+                  }
+                });
+                return hook2.run([
+                  {
+                    melindaHostId: 'foo',
+                    record: new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }),
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }]
+                  },
+                  {
+                    melindaHostId: 'foo',
+                    record: new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12346'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'bar'
+                          }]
+                        }
+                      ]
+                    }),
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22346'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'bar'
+                          }]
+                        },
+                        {
+                          tag: '773'
+                        }
+                      ]
+                    }]
+                  },
+                  {
+                    melindaHostId: 'foo',
+                    record: new MarcRecord({
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12347'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'fubar'
+                          }]
+                        }
+                      ]
+                    }),
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '22347'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'fubar'
+                          }]
+                        },
+                        {
+                          tag: '773'
+                        }
+                      ]
+                    }]
+                  }
+                ]).then(function() {
+                  throw new Error();
+                }, function(result) {
+                  expect(result).to.be.an('array');
+                  expect(result).to.have.length(3);
+                  expect(result[0].failed).to.be.true /* jshint -W030 */;
+                  expect(result[0].message).to.equal('Too many extraneous record store records in the host-component set');
                 });
               });
-              
             });
             
           });
@@ -1600,4 +1540,4 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
     
   });
   
-}
+}  
