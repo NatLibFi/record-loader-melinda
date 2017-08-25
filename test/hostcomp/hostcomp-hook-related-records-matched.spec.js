@@ -1076,7 +1076,7 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
 								});
 							});
 							
-							it('Should fail to find matches by index because surrounding records have the same id', function() {
+							it('Should fail to find matches by index because the other surrounding record does not have a correct index', function() {
 								var hook2 = hookFactory({
 									findMissingByIndex: true
 								}).setRecordStore({
@@ -1264,6 +1264,196 @@ function factory(chai, chaiAsPromised, simple, MarcRecord, Promise, hookFactory)
 									expect(result[1].failed).to.be.true /* jshint -W030 */;
 									expect(result[1].message).to.equal('Records without matches not allowed');
 								});
+							});
+              
+              it('Should fail to find matches by index because surrounding records do not have correct indexes', function() {
+                var hook2 = hookFactory({
+                  findMissingByIndex: true
+                }).setRecordStore({
+                  read: function() {
+                    return Promise.resolve([
+                      new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '12345'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'foo'
+                            }]
+                          }
+                        ]
+                      }),
+                      new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '12346'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773'
+                          }
+                        ]
+                      }),
+                      new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '12347'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773'
+                          }
+                        ]
+                      }),
+                      new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '12348'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773'
+                          }
+                        ]
+                      })
+                    ]);
+                  }
+                });
+                return hook2.run([
+                  {
+                    record: {
+                      melindaHostId: 'foo',
+                      record: new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '2348'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'foo'
+                            }]
+                          }
+                        ]
+                      })
+                    },
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12345'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'foo'
+                          }]
+                        }
+                      ]
+                    }]
+                  },
+                  {
+                    record: {
+                      melindaHostId: 'foo',
+                      record: new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '2345'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773'
+                          }
+                        ]
+                      })
+                    },
+                    matchedRecords: []
+                  },
+                  {
+                    record: {
+                      melindaHostId: 'foo',
+                      record: new MarcRecord({
+                        fields: [
+                          {
+                            tag: '001',
+                            value: '2345'
+                          },
+                          {
+                            tag: '245',
+                            subfields: [{
+                              code: 'a',
+                              value: 'bar'
+                            }]
+                          },
+                          {
+                            tag: '773',
+                            subfields: []
+                          }
+                        ]
+                      })
+                    },
+                    matchedRecords: [{
+                      fields: [
+                        {
+                          tag: '001',
+                          value: '12347'
+                        },
+                        {
+                          tag: '245',
+                          subfields: [{
+                            code: 'a',
+                            value: 'bar'
+                          }]
+                        },
+                        {
+                          tag: '773'
+                        }
+                      ]
+                    }]
+                  }
+                ]).then(function() {
+                  throw new Error();
+                }, function(result) {
+                  expect(result).to.be.an('array');
+                  expect(result).to.have.length(3);
+                  expect(result[1].failed).to.be.true /* jshint -W030 */;
+                  expect(result[1].message).to.equal('Records without matches not allowed');
+                });
 							});
 							
 							it('Should reject because there are non-unique matches for records', function() {
