@@ -99,7 +99,7 @@ function factory(chai, chaiAsPromised, MarcRecord, Promise, http_mock, recordSto
           
           it('Should create a new record in the store', function(){          
             http_mock.create({
-              url:'https://foo.bar/bib/',
+              url:'https://foo.bar/bib',
               method: 'POST',
               status: 200,
               body: '<response><message>[0018] Document: 000006000 was updated successfully.</message></response>'
@@ -127,7 +127,7 @@ function factory(chai, chaiAsPromised, MarcRecord, Promise, http_mock, recordSto
           
           it('Should fail to create a new record in the store', function() {
             http_mock.create({
-              url:'https://foo.bar/bib/',
+              url:'https://foo.bar/bib',
               method: 'POST',
               status: 200,
               body: '<response><error>[0101] foo.- trigger error</error></response>'
@@ -564,13 +564,13 @@ function factory(chai, chaiAsPromised, MarcRecord, Promise, http_mock, recordSto
           
           it('Should fail to update a record in the store', function() {
             http_mock.create({
-              url:'https://foo.bar//bib/6000',
+              url:'https://foo.bar/bib/6000',
               method: 'GET',
               status: 200,
               body: '<?xml version="1.0" encoding="UTF-8"?><record><leader>^^^^^cam^a2200613zi^4500</leader><controlfield tag="001">000006000</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">foo</subfield></datafield></record>'
             });
             http_mock.create({
-              url:'https://foo.bar//bib/6000',
+              url:'https://foo.bar/bib/6000',
               method: 'PUT',
               status: 500
             });
@@ -603,13 +603,13 @@ function factory(chai, chaiAsPromised, MarcRecord, Promise, http_mock, recordSto
             
             it('Should update a record in the store', function(){
               http_mock.create({
-                url:'https://foo.bar//bib/6000',
+                url:'https://foo.bar/bib/6000',
                 method: 'GET',
                 status: 200,
                 body: '<?xml version="1.0" encoding="UTF-8"?><record><leader>^^^^^cam^a2200613zi^4500</leader><controlfield tag="001">000006000</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">foo</subfield></datafield></record>'
               });
               http_mock.create({
-                url:'https://foo.bar//bib/6000',
+                url:'https://foo.bar/bib/6000',
                 method: 'PUT',
                 status: 200,
                 body: '<response><message>[0018] Document: 000006000 was updated successfully.</message></response>'
@@ -661,13 +661,13 @@ function factory(chai, chaiAsPromised, MarcRecord, Promise, http_mock, recordSto
               
               it('Should update a record in the store and remove it from cache', function() {
                 http_mock.create({
-                  url:'https://foo.bar//bib/6000',
+                  url:'https://foo.bar/bib/6000',
                   method: 'GET',
                   status: 200,
                   body: '<?xml version="1.0" encoding="UTF-8"?><record><leader>^^^^^cam^a2200613zi^4500</leader><controlfield tag="001">000006000</controlfield><datafield tag="245" ind1=" " ind2=" "><subfield code="a">foo</subfield></datafield></record>'
                 });
                 http_mock.create({
-                  url:'https://foo.bar//bib/6000',
+                  url:'https://foo.bar/bib/6000',
                   method: 'PUT',
                   status: 200,
                   body: '<response><message>[0018] Document: 000006000 was updated successfully.</message></response>'
