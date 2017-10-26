@@ -35,6 +35,7 @@
       'chai/chai',
       'chai-as-promised',
       '@natlibfi/es6-polyfills/lib/polyfills/promise',
+      '@natlibfi/record-loader-prototypes/lib/logger/protype',
       '../../lib/hostcomp/processors/filter/melinda'
     ], factory);
   } else if (typeof module === 'object' && module.exports) {
@@ -42,13 +43,14 @@
       require('chai'),
       require('chai-as-promised'),
       require('@natlibfi/es6-polyfills/lib/polyfills/promise'),
+      require('@natlibfi/record-loader-prototypes/lib/logger/prototype'),
       require('../../lib/hostcomp/processors/filter/melinda')
     );
   }
 
 }(this, factory));
 
-function factory(chai, chaiAsPromised, Promise, processorFactory)
+function factory(chai, chaiAsPromised, Promise, loggerFactory, processorFactory)
 {
 
   'use strict';
@@ -71,17 +73,16 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
 
         describe('object', function() {
 
-          var processor = processorFactory();
-
           describe('#setLogger', function() {
-
             it('Should return itself', function() {
+              var processor = processorFactory();
               expect(processor.setLogger()).to.eql(processor);
             });
 
           });
 
           describe('#run', function() {
+            var processor = processorFactory().setLogger(loggerFactory().createInstance('foobar'));
 
             it('Should return a Promise which resolves with a boolean', function() {
 
