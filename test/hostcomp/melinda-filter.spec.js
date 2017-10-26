@@ -105,7 +105,8 @@ function factory(chai, chaiAsPromised, Promise, processorFactory)
               }).then(function(result) {
 
                 expect(result).to.be.an('object').and.to.eql({
-                  passes: false
+                  passes: false,
+                  filterDetails: 'The record is missing 001-field'
                 });
                 
                 return processor.run({
