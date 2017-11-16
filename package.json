@@ -68,7 +68,8 @@
   "license": "AGPL-3.0+",
   "version": "1.2.0",
   "bin": {
-    "merged-records-to-files": "./bin/merged-records-to-files"
+    "merged-records-to-files": "./bin/merged-records-to-files",
+    "run-host-components-merge": "./bin/run-host-components-merge.js"
   },
   "scripts": {
     "lint": "jshint .",
